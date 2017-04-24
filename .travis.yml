@@ -5,3 +5,4 @@ jdk:
 
 script:
   - mvn clean test jacoco:report -P continous-integration
+  - mvn com.gavinmogan:codacy-maven-plugin:coverage -DcoverageReportFile=target/site/jacoco/jacoco.xml -DprojectToken=$PROJECT_TOKEN -DapiToken=$API_TOKEN

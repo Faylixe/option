@@ -1,7 +1,10 @@
 package fr.faylixe.option;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -11,8 +14,8 @@ import org.junit.Test;
  */
 public final class OptionableContainerTest {
 
-	/** Test application usage description string. **/
-	private static final String USAGE = "Foo";
+	/** String value to be tested. **/
+	private static final String STRING = "Foo";
 
 	/** Integer value to be tested. **/
 	private static final int INTEGER = 1;
@@ -32,7 +35,7 @@ public final class OptionableContainerTest {
 		"--f", String.valueOf(FLOAT),
 		"--l", String.valueOf(LONG),
 		"--d", String.valueOf(DOUBLE),
-		"--s", USAGE,
+		"--s", STRING,
 	};
 
 	/**
@@ -59,21 +62,34 @@ public final class OptionableContainerTest {
 		private double d;
 
 		/** String parameter testing. **/
-		@Optionable
+		@Optionable(required=true)
 		private String s;
 
 	}
 
-	/** Testing boostraping container. **/
+	/** Target testing container. **/
+	private MyOptionableContainer container;
+
+	/** Test fixture. **/
+	@Before
+	public void setUp() {
+		this.container = new MyOptionableContainer();
+	}
+
+	/** Testing bootstrapping container. **/
 	@Test
-	public void testBootstrap() {
-		final MyOptionableContainer container = new MyOptionableContainer();
-		container.bootstrap(ARGS);
+	public void testValidBootstrap() {
+		assertTrue(container.bootstrap(ARGS));
 		assertEquals(INTEGER, container.i);
 		assertEquals(FLOAT, container.f, 0.0);
 		assertEquals(LONG, container.l);
 		assertEquals(DOUBLE, container.d, 0.0);
-		assertEquals(USAGE, container.s);
+		assertEquals(STRING, container.s);
+	}
+
+	/** Testing bootstrapping with missing parameter. **/
+	public void testNotValidBootstrap() {
+		assertFalse(container.bootstrap(new String[]{}));
 	}
 
 }

@@ -9,6 +9,7 @@ import org.junit.Test;
  */
 public final class OptionableFieldFactoryTest {
 
+	/** Default application usage. **/
 	private static final String USAGE = "Foo";
 
 	/** Testing error with duplicate optionable field initial letter. **/

@@ -18,9 +18,6 @@ import org.apache.commons.cli.ParseException;
  */
 public class OptionableContainer {
 
-	/** **/
-	private static final String DEFAULT_USAGE = "";
-
 	/** Container usage description. **/
 	private String usage;
 
@@ -28,10 +25,11 @@ public class OptionableContainer {
 	 * Default constructor.
 	 */
 	protected OptionableContainer() {
-		this.usage = DEFAULT_USAGE;
+		this.usage = "";
 	}
 
 	/**
+	 * Usage setter.
 	 * 
 	 * @param usage Container usage description.
 	 */
@@ -45,8 +43,9 @@ public class OptionableContainer {
 	 * attributes.
 	 * 
 	 * @param args Command line parameters issued from main method.
+	 * @return <tt>true</tt> if the bootstrapping went well, <tt>false</tt> otherwise.
 	 */
-	public void bootstrap(final String [] args) {
+	public boolean bootstrap(final String [] args) {
 		final OptionableFieldFactory factory = new OptionableFieldFactory();
 		final List<OptionableField> fields = factory.create(getClass());
 		final Options options = new Options();
@@ -61,6 +60,7 @@ public class OptionableContainer {
 			for (final OptionableField field : fields) {
 				field.validate(command, this);
 			}
+			return true;
 		}
 		catch (final ParseException e) {
 			// TODO : Handle this case (rethrow ?)
@@ -69,6 +69,7 @@ public class OptionableContainer {
 			System.err.println("An error occurs while parsing command line parameter : " + e.getMessage());
 			formatter.printHelp(usage, options);
 		}
+		return false;
 	}
 
 }

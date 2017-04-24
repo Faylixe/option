@@ -1,6 +1,7 @@
 package fr.faylixe.option;
 
 /**
+ * Abstract application class based on {@link OptionableContainer}.
  * 
  * @author fv
  */
@@ -11,8 +12,9 @@ public abstract class OptionableApplication extends OptionableContainer implemen
 	private boolean verbose;
 
 	/**
+	 * Default constructor.
 	 * 
-	 * @param usage
+	 * @param usage Application usage.
 	 */
 	protected OptionableApplication(final String usage) {
 		setUsage(usage);
@@ -29,9 +31,12 @@ public abstract class OptionableApplication extends OptionableContainer implemen
 
 	/** {@inheritDoc} **/
 	@Override
-	public void bootstrap(String[] args) {
-		super.bootstrap(args);
-		run();
+	public boolean bootstrap(String[] args) {
+		final boolean isBoostrapped = super.bootstrap(args);
+		if (isBoostrapped) {
+			run();
+		}
+		return isBoostrapped;
 	}
 
 }

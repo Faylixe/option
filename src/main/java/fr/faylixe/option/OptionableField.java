@@ -1,9 +1,6 @@
 package fr.faylixe.option;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
@@ -104,8 +101,9 @@ public final class OptionableField {
 	 * @param command {@link CommandLine} evaluated.
 	 * @param receiver Target field receiver class.
 	 * @throws IllegalAccessException If setting the field value is not permitted.
+	 * @throws IllegalArgumentException If the option is required and does not have value.
 	 */
-	public void validate(final CommandLine command, final Object receiver) throws IllegalAccessException {
+	public void validate(final CommandLine command, final Object receiver) throws IllegalAccessException, IllegalArgumentException {
 		validateReceiver(receiver);
 		if (command.hasOption(longName)) {
 			field.setAccessible(true);

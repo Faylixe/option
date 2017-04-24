@@ -23,9 +23,6 @@ public final class OptionCache {
 	/** Error message for too high name length with short option. **/
 	private static final String LENGTH_TOO_HIGH = "Length too high for short option";
 
-	/** Unique option cache instance. **/
-	private static OptionCache INSTANCE;
-
 	/** Set of long option registered. **/
 	private final Set<String> longs;
 
@@ -35,7 +32,7 @@ public final class OptionCache {
 	/**
 	 * Default constructor.
 	 */
-	private OptionCache() {
+	public OptionCache() {
 		this.longs = new HashSet<>();
 	}
 
@@ -83,6 +80,26 @@ public final class OptionCache {
 	 */
 	private void addShortOption(final String name) {
 		shorts ^= (1 << getIndex(name));
+	}
+
+	/**
+	 * Factory method that transforms the given <tt>field</tt>
+	 * into a given {@link OptionableField} assuming the given
+	 * <tt>field</tt> is annotated as {@link Optionable}.
+	 * 
+	 * @param field Field to transform.
+	 * @return Created {@link OptionableField} instance.
+	 */
+	protected OptionableField toOptionableField(final Field field) {
+		final Optionable optionable = field.getAnnotation(Optionable.class);
+		final String shortName = getShortOption(field, optionable.shortName());
+		final String longName = getLongOption(field, optionable.longName());
+		return new OptionableField(
+				field,
+				shortName,
+				longName,
+				optionable.description(),
+				optionable.required());
 	}
 
 	/**
@@ -143,20 +160,6 @@ public final class OptionCache {
 	 */
 	public String getShortOption(final Field field, final String original) {
 		return getOption(field, original, this::isShortOptionAvailable, this::addShortOption).substring(0, 1);
-	}
-
-	/**
-	 * Retrieves unique option cache instance.
-	 * 
-	 * @return Unique cache instance.
-	 */
-	protected static OptionCache getInstance() {
-		synchronized (OptionCache.class) {
-			if (INSTANCE == null) {
-				INSTANCE = new OptionCache();
-			}
-		}
-		return INSTANCE;
 	}
 
 }

@@ -2,9 +2,9 @@ package fr.faylixe.option;
 
 import java.util.List;
 
-import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 
@@ -31,11 +31,13 @@ public abstract class OptionableApplication implements Runnable {
 	}
 
 	/**
+	 * This is where the magic goes, annotated field are converted to option
+	 * and given command line parameters are evaluated to fill application's
+	 * attributes.
 	 * 
-	 * @param args
-	 * @throws Exception
+	 * @param args Command line parameters issued from main method.
 	 */
-	public final void bootstrap(final String [] args) throws Exception {
+	public final void bootstrap(final String [] args) {
 		final List<OptionableField> fields = OptionableField.create(getClass());
 		final Options options = new Options();
 		fields
@@ -43,18 +45,15 @@ public abstract class OptionableApplication implements Runnable {
 			.map(OptionableField::toOption)
 			.forEach(options::addOption);
 		final HelpFormatter formatter = new HelpFormatter();
-		final CommandLineParser parser = new BasicParser();
+		final CommandLineParser parser = new DefaultParser();
 		try {
 			final CommandLine command = parser.parse(options, args);
 			for (final OptionableField field : fields) {
 				field.validate(command, this);
 			}
 		}
-		catch (final Exception e) {
+		catch (final Throwable e) {
 			System.err.println("An error occurs while parsing command line parameter : " + e.getMessage());
-			if (verbose) {
-				e.printStackTrace();
-			}
 			formatter.printHelp(getUsage(), options);
 		}
 		run();

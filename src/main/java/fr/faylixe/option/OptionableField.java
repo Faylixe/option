@@ -23,14 +23,17 @@ public final class OptionableField {
 	/** Target field that is decorated. **/
 	private final Field field;
 
-	/** Field option. **/
-	private final Optionable optionable;
-
 	/** Long name for the corresponding option. **/
 	private final String longName;
 
 	/** Short name for the corresponding option. **/
 	private final String shortName;
+
+	/** Field description. **/
+	private final String description;
+
+	/** Indicates if this field is required or not. **/
+	private final boolean required;	
 
 	/** Indicates if this option is a flag. **/
 	private final boolean flag;
@@ -39,16 +42,24 @@ public final class OptionableField {
 	 * Default constructor.
 	 * 
 	 * @param field Field decorated by this class.
+	 * @param shortName Short name for the corresponding option.
+	 * @param longName Long name for the corresponding option. 
+	 * @param description Field description.
+	 * @param required Indicates if this field is required or not.
 	 */
-	private OptionableField(final Field field) {
+	protected OptionableField(
+			final Field field,
+			final String shortName,
+			final String longName,
+			final String description,
+			final boolean required) {
 		this.field = field;
-		this.optionable = field.getAnnotation(Optionable.class);
-		final OptionCache cache = OptionCache.getInstance();
-		this.shortName = cache.getShortOption(field, optionable.shortName());
-		this.longName = cache.getLongOption(field, optionable.longName());
+		this.shortName = shortName;
+		this.longName = longName;
+		this.description = description;
+		this.required = required;
 		final Class<?> type = field.getType();
-		final OptionableValueFactories factory = OptionableValueFactories.BOOLEAN;
-		this.flag = factory.support(type);
+		this.flag = OptionableValueFactories.BOOLEAN.support(type);
 	}
 
 	/**
@@ -65,7 +76,6 @@ public final class OptionableField {
 		}
 		final Class<?> receiverClass = receiver.getClass();
 		final Class<?> targetClass = field.getDeclaringClass();
-		// TODO : Check for inheritance ?.
 		if (!targetClass.isAssignableFrom(receiverClass)) {
 			throw new IllegalArgumentException("Target receiver does not have target field " + field.getName());
 		}		
@@ -77,7 +87,14 @@ public final class OptionableField {
 	 * @return This field as an {@link Option}.
 	 */
 	public Option toOption() {
-		return new Option(shortName, longName, !flag, optionable.description());
+		return Option
+			.builder(shortName)
+			.longOpt(longName)
+			.desc(description)
+			.required(required)
+			.type(field.getType())
+			.hasArg(!flag)
+			.build();
 	}
 
 	/**
@@ -99,11 +116,11 @@ public final class OptionableField {
 				final String value = command.getOptionValue(longName);
 				final Object object = OptionableValueFactories.getOptionableValue(field, value);
 				if (object != null) {
-					field.set(receiver, object); // TODO : Ensure autoboxing is done for primitive here.
+					field.set(receiver, object);
 				}
 			}
 		}
-		if (optionable.required()) {
+		if (required) {
 			throw new IllegalArgumentException(String.format(ARGUMENT_REQUIRED, longName));
 		}
 	}
@@ -116,6 +133,18 @@ public final class OptionableField {
 	 * @return Created option list.
 	 */
 	public static List<OptionableField> create(final Class<?> application) {
+		return create(application, new OptionCache());
+	}
+
+	/**
+	 * Static factory that creates a list of {@link OptionableField}
+	 * for a given <tt>application</tt> class.
+	 * 
+	 * @param application Target class where field should be optionalized.
+	 * @param cache {@link OptionCache} to create list from;
+	 * @return Created option list.
+	 */
+	private static List<OptionableField> create(final Class<?> application, final OptionCache cache) {
 		if (application == null) {
 			return Collections.emptyList();
 		}
@@ -126,7 +155,7 @@ public final class OptionableField {
 		options.addAll(parents);
 		for (final Field field : fields) {
 			if (field.isAnnotationPresent(Optionable.class)) {
-				options.add(new OptionableField(field));
+				options.add(cache.toOptionableField(field));
 			}
 		}
 		return options;

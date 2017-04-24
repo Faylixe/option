@@ -1,6 +1,7 @@
 # Option
 
 [![Build Status](https://travis-ci.org/Faylixe/option.svg?branch=master)](https://travis-ci.org/Faylixe/option)
+[![Codacy Badge](https://api.codacy.com/project/badge/Coverage/b6ef03db876e4a3f90006ee2d3956d59)](https://www.codacy.com/app/Faylixe/option?utm_source=github.com&utm_medium=referral&utm_content=Faylixe/option&utm_campaign=Badge_Coverage)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/b6ef03db876e4a3f90006ee2d3956d59)](https://www.codacy.com/app/Faylixe/option?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Faylixe/option&amp;utm_campaign=Badge_Grade)
 
 Option is a simple Java framework that allows easy command line option parsing.

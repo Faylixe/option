@@ -124,41 +124,5 @@ public final class OptionableField {
 			throw new IllegalArgumentException(String.format(ARGUMENT_REQUIRED, longName));
 		}
 	}
-
-	/**
-	 * Static factory that creates a list of {@link OptionableField}
-	 * for a given <tt>application</tt> class.
-	 * 
-	 * @param application Target class where field should be optionalized.
-	 * @return Created option list.
-	 */
-	public static List<OptionableField> create(final Class<?> application) {
-		return create(application, new OptionCache());
-	}
-
-	/**
-	 * Static factory that creates a list of {@link OptionableField}
-	 * for a given <tt>application</tt> class.
-	 * 
-	 * @param application Target class where field should be optionalized.
-	 * @param cache {@link OptionCache} to create list from;
-	 * @return Created option list.
-	 */
-	private static List<OptionableField> create(final Class<?> application, final OptionCache cache) {
-		if (application == null) {
-			return Collections.emptyList();
-		}
-		final List<OptionableField> parents = create(application.getSuperclass());
-		final Field [] fields = application.getDeclaredFields();
-		final int size = fields.length + parents.size();
-		final List<OptionableField> options = new ArrayList<>(size);
-		options.addAll(parents);
-		for (final Field field : fields) {
-			if (field.isAnnotationPresent(Optionable.class)) {
-				options.add(cache.toOptionableField(field));
-			}
-		}
-		return options;
-	}
 	
 }

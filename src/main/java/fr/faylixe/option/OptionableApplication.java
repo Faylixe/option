@@ -38,7 +38,8 @@ public abstract class OptionableApplication implements Runnable {
 	 * @param args Command line parameters issued from main method.
 	 */
 	public final void bootstrap(final String [] args) {
-		final List<OptionableField> fields = OptionableField.create(getClass());
+		final OptionableFieldFactory factory = new OptionableFieldFactory();
+		final List<OptionableField> fields = factory.create(getClass());
 		final Options options = new Options();
 		fields
 			.stream()

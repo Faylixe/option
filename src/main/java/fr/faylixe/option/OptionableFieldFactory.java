@@ -1,18 +1,21 @@
 package fr.faylixe.option;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 /**
- * An {@link OptionCache} handles VM overall
- * option name.
+ * An {@link OptionableFieldFactory} handles {@link OptionableField}
+ * creation and prevents from naming conflict.
  * 
  * @author fv
  */
-public final class OptionCache {
+public final class OptionableFieldFactory {
 
 	/** Error message for field name not available exception. **/
 	private static final String FIELD_NOT_AVAILABLE = "Field name %s is not available as option name.";
@@ -32,7 +35,7 @@ public final class OptionCache {
 	/**
 	 * Default constructor.
 	 */
-	public OptionCache() {
+	public OptionableFieldFactory() {
 		this.longs = new HashSet<>();
 	}
 
@@ -90,7 +93,7 @@ public final class OptionCache {
 	 * @param field Field to transform.
 	 * @return Created {@link OptionableField} instance.
 	 */
-	protected OptionableField toOptionableField(final Field field) {
+	private OptionableField toOptionableField(final Field field) {
 		final Optionable optionable = field.getAnnotation(Optionable.class);
 		final String shortName = getShortOption(field, optionable.shortName());
 		final String longName = getLongOption(field, optionable.longName());
@@ -100,6 +103,34 @@ public final class OptionCache {
 				longName,
 				optionable.description(),
 				optionable.required());
+	}
+
+	/**
+	 * Selects the long option name for the given
+	 * field regarding of the provided user given
+	 * name. The name will be added to the internal cache.
+	 * 
+	 * @param field Optionable field to get long name for.
+	 * @param original User given name through field annotation.
+	 * @return Field name or <tt>original</tt> name.
+	 * @throws IllegalStateException If no name can be used.
+	 */
+	private String getLongOption(final Field field, final String original) {
+		return getOption(field, original, this::isLongOptionAvailable, longs::add);
+	}
+
+	/**
+	 * Selects the short option name for the given
+	 * field regarding of the provided user given
+	 * name. The name will be added to the internal cache.
+	 * 
+	 * @param field Optionable field to get short name for.
+	 * @param original User given name through field annotation.
+	 * @return Field name or <tt>original</tt> name.
+	 * @throws IllegalStateException If no name can be used.
+	 */
+	private String getShortOption(final Field field, final String original) {
+		return getOption(field, original, this::isShortOptionAvailable, this::addShortOption).substring(0, 1);
 	}
 
 	/**
@@ -135,31 +166,27 @@ public final class OptionCache {
 	}
 
 	/**
-	 * Selects the long option name for the given
-	 * field regarding of the provided user given
-	 * name. The name will be added to the internal cache.
+	 * Static factory that creates a list of {@link OptionableField}
+	 * for a given <tt>application</tt> class.
 	 * 
-	 * @param field Optionable field to get long name for.
-	 * @param original User given name through field annotation.
-	 * @return Field name or <tt>original</tt> name.
-	 * @throws IllegalStateException If no name can be used.
+	 * @param application Target class where field should be optionalized.
+	 * @return Created option list.
 	 */
-	public String getLongOption(final Field field, final String original) {
-		return getOption(field, original, this::isLongOptionAvailable, longs::add);
-	}
-
-	/**
-	 * Selects the short option name for the given
-	 * field regarding of the provided user given
-	 * name. The name will be added to the internal cache.
-	 * 
-	 * @param field Optionable field to get short name for.
-	 * @param original User given name through field annotation.
-	 * @return Field name or <tt>original</tt> name.
-	 * @throws IllegalStateException If no name can be used.
-	 */
-	public String getShortOption(final Field field, final String original) {
-		return getOption(field, original, this::isShortOptionAvailable, this::addShortOption).substring(0, 1);
+	public List<OptionableField> create(final Class<?> application) {
+		if (application == null) {
+			return Collections.emptyList();
+		}
+		final List<OptionableField> parents = create(application.getSuperclass());
+		final Field [] fields = application.getDeclaredFields();
+		final int size = fields.length + parents.size();
+		final List<OptionableField> options = new ArrayList<>(size);
+		options.addAll(parents);
+		for (final Field field : fields) {
+			if (field.isAnnotationPresent(Optionable.class)) {
+				options.add(toOptionableField(field));
+			}
+		}
+		return options;
 	}
 
 }

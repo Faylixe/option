@@ -1,5 +1,7 @@
 # Option
 
+[![Build Status](https://travis-ci.org/Faylixe/option.svg?branch=master)](https://travis-ci.org/Faylixe/option)
+
 Option is a simple Java framework that allows easy command line option parsing.
 It is based on Apache Commons CLI framworks, but provides an easier interface
 based on annotation.

@@ -15,7 +15,7 @@ import org.apache.commons.cli.Options;
  * 
  * @author fv
  */
-public abstract class OptionableApplication {
+public abstract class OptionableApplication implements Runnable {
 
 	/** Boolean flag that indicates if program should log verbosely. **/
 	@Optionable(description="Indicates if the program output should be verbose.")
@@ -57,7 +57,7 @@ public abstract class OptionableApplication {
 			}
 			formatter.printHelp(getUsage(), options);
 		}
-		start();
+		run();
 	}
 
 	/**
@@ -66,15 +66,5 @@ public abstract class OptionableApplication {
 	 * @return Application usage description.
 	 */
 	protected abstract String getUsage();
-
-	/**
-	 * Concrete delegate application method.
-	 * This method aim to be called once all
-	 * {@link OptionableField} has been validated
-	 * and filled with required value.
-	 * 
-	 * @throws Exception If any error occurs during execution.
-	 */
-	protected abstract void start() throws Exception;
 
 }

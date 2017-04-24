@@ -61,13 +61,13 @@ public final class OptionableField {
 	 */
 	private void validateReceiver(final Object receiver) {
 		if (receiver == null) {
-			throw new IllegalArgumentException(""); // TODO : Add error message.
+			throw new IllegalArgumentException("Cannot configure null receiver");
 		}
 		final Class<?> receiverClass = receiver.getClass();
 		final Class<?> targetClass = field.getDeclaringClass();
-		// TODO : Check for inheritance.
+		// TODO : Check for inheritance ?.
 		if (!targetClass.isAssignableFrom(receiverClass)) {
-			throw new IllegalArgumentException(""); // TODO : Add error message.
+			throw new IllegalArgumentException("Target receiver does not have target field " + field.getName());
 		}		
 	}
 

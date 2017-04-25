@@ -2,7 +2,7 @@ language: java
 jdk:
   - oraclejdk8
 script:
-  - mvn clean test jacoco:report -P continous-integration
+  - mvn clean test jacoco:report
 after_success:
   - mvn com.gavinmogan:codacy-maven-plugin:coverage -DcoverageReportFile=target/site/jacoco/jacoco.xml -DprojectToken=$PROJECT_TOKEN -DapiToken=$API_TOKEN
 before_deploy:
@@ -10,7 +10,7 @@ before_deploy:
   - openssl aes-256-cbc -pass pass:$ENCRYPTION_PASSWORD -in deploy/secring.gpg.enc -out deploy/secring.gpg -d
 deploy:
   provider: script
-  script: mvn deploy -Prelease --settings deploy/settings.xml -DperformRelease=true -DskipTests=true
+  script: deploy/run.sh
   on:
     branch: master
 

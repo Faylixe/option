@@ -5,13 +5,6 @@ script:
   - mvn clean test jacoco:report
 after_success:
   - mvn com.gavinmogan:codacy-maven-plugin:coverage -DcoverageReportFile=target/site/jacoco/jacoco.xml -DprojectToken=$PROJECT_TOKEN -DapiToken=$API_TOKEN
-before_deploy:
   - openssl aes-256-cbc -pass pass:$ENCRYPTION_PASSWORD -in deploy/pubring.gpg.enc -out deploy/pubring.gpg -d
   - openssl aes-256-cbc -pass pass:$ENCRYPTION_PASSWORD -in deploy/secring.gpg.enc -out deploy/secring.gpg -d
-deploy:
-  provider: script
-  script: deploy/run.sh
-  skip_cleanup: true
-  on:
-    branch: master
-
+  - deploy/run.sh

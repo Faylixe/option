@@ -55,12 +55,7 @@ javac App.java
 java App --flag --value foo
 ```
 
-## The Optionable annotation
-
-An ``OptionableApplication`` class aims to fill attribute with values from command line.
-In order to do so such attribute should be annotated using ``@Optionable`` annotation.
-
-
 ## Short option conflict
-## Application usage
-## Contributing
+
+If you have two attribute starting with the same initial letter, you can explicitly specifying
+the short option name to the ``@Optionable`` annotation using ``shortName`` parameters.

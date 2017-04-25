@@ -23,20 +23,18 @@ public final class OptionableFieldFactory {
 	/** Error message for original name not available exception. **/
 	private static final String ORIGINAL_NOT_AVAILABLE = "Original option name %s is not available.";
 
-	/** Error message for too high name length with short option. **/
-	private static final String LENGTH_TOO_HIGH = "Length too high for short option";
-
 	/** Set of long option registered. **/
 	private final Set<String> longs;
 
-	/** Integer that acts as a binary vector for short name selection. **/
-	private int shorts;
+	/** Set of short option registered. **/
+	private final Set<String> shorts;
 
 	/**
 	 * Default constructor.
 	 */
 	public OptionableFieldFactory() {
 		this.longs = new HashSet<>();
+		this.shorts = new HashSet<>();
 	}
 
 	/**
@@ -50,39 +48,13 @@ public final class OptionableFieldFactory {
 	}
 
 	/**
-	 * Retrieves the index of the short option
-	 * from the given <tt>name</tt>.
-	 * 
-	 * @param name Name of the option to get index for.
-	 * @return Index of the given <tt>name</tt>.
-	 * @throws IllegalArgumentException If the given name is not valid.
-	 */
-	private int getIndex(final String name) {
-		if (name.isEmpty()) {
-			throw new IllegalArgumentException(LENGTH_TOO_HIGH);
-		}
-		final int option = name.toLowerCase().charAt(0);
-		return option - (int) 'a';
-	}
-
-	/**
 	 * Indicates if the given <tt>name</tt> is valid as a short option.
 	 * 
 	 * @param name Name of the short option to check.
 	 * @return <tt>true</tt> if the given <tt>name</tt> is available as short option, <tt>false</tt> otherwise.
 	 */
 	public boolean isShortOptionAvailable(final String name) {
-		return (shorts & (1 << getIndex(name))) == 0;
-	}
-
-	/**
-	 * Adds the given short option to the internal
-	 * short option vector.
-	 * 
-	 * @param name Name of the short option to add.
-	 */
-	private void addShortOption(final String name) {
-		shorts ^= (1 << getIndex(name));
+		return !shorts.contains(name);
 	}
 
 	/**
@@ -130,7 +102,7 @@ public final class OptionableFieldFactory {
 	 * @throws IllegalStateException If no name can be used.
 	 */
 	private String getShortOption(final Field field, final String original) {
-		return getOption(field, original, this::isShortOptionAvailable, this::addShortOption).substring(0, 1);
+		return getOption(field, original, this::isShortOptionAvailable, shorts::add).substring(0, 1);
 	}
 
 	/**

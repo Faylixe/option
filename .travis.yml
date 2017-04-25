@@ -1,6 +1,4 @@
 language: java
-env:
-  - GPG_DIR="`pwd`/deploy"
 jdk:
   - oraclejdk8
 script:
@@ -8,8 +6,8 @@ script:
 after_success:
   - mvn com.gavinmogan:codacy-maven-plugin:coverage -DcoverageReportFile=target/site/jacoco/jacoco.xml -DprojectToken=$PROJECT_TOKEN -DapiToken=$API_TOKEN
 before_deploy:
-  - openssl aes-256-cbc -pass pass:$ENCRYPTION_PASSWORD -in $GPG_DIR/pubring.gpg.enc -out $GPG_DIR/pubring.gpg -d
-  - openssl aes-256-cbc -pass pass:$ENCRYPTION_PASSWORD -in $GPG_DIR/secring.gpg.enc -out $GPG_DIR/secring.gpg -d
+  - openssl aes-256-cbc -pass pass:$ENCRYPTION_PASSWORD -in deploy/pubring.gpg.enc -out deploy/pubring.gpg -d
+  - openssl aes-256-cbc -pass pass:$ENCRYPTION_PASSWORD -in deploy/secring.gpg.enc -out deploy/secring.gpg -d
 deploy:
   - mvn deploy --settings deploy/settings.xml -DperformRelease=true -DskipTests=true
 

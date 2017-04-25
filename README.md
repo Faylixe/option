@@ -5,14 +5,24 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/b6ef03db876e4a3f90006ee2d3956d59)](https://www.codacy.com/app/Faylixe/option?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Faylixe/option&amp;utm_campaign=Badge_Grade)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/fr.faylixe/option/badge.svg)](https://maven-badges.herokuapp.com/maven-central/fr.faylixe/option)
 
-Option is a simple Java framework that allows easy command line option parsing.
-It is based on Apache Commons CLI framworks, but provides an easier interface
-based on annotation.
+**Option** is a simple Java library that allows easy command line option parsing.
+It is based on Apache Commons CLI framework, but provides an easier interface
+based on annotation and reflection.
+
+In order to use it in your project just use the following Maven dependency :
+
+```xml
+<dependency>
+    <groupId>fr.faylixe</groupId>
+    <artifactId>option</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
 
 ## Basic usage
 
 Considering a Java command line application that could have a boolean flag settled and
-take a String parameter, using Option, such task is easy :
+take an optional String parameter, using **Option**, such task is easy :
 
 ```java
 public class App extends OptionableApplication {
@@ -36,8 +46,8 @@ public class App extends OptionableApplication {
 }
 ```
 
-All we have to do is to annotated application class attributes with @Optionable and calls
-bootstrap() methods using CLI args and the job is done ! Running such application will only
+All we have to do is to annotate application class attributes with ``@Optionable`` and calls
+_bootstrap(String [])_ methods using CLI provided args and the job is done ! Running such application will only
 consist in following command :
 
 ```bash
@@ -47,8 +57,8 @@ java App --flag --value foo
 
 ## The Optionable annotation
 
-An OptionableApplication class aims to fill attribute with values from command line.
-In order to do so such attribute should be annotated using @Optionable annotation.
+An ``OptionableApplication`` class aims to fill attribute with values from command line.
+In order to do so such attribute should be annotated using ``@Optionable`` annotation.
 
 
 ## Short option conflict

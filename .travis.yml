@@ -10,7 +10,7 @@ before_deploy:
   - openssl aes-256-cbc -pass pass:$ENCRYPTION_PASSWORD -in deploy/secring.gpg.enc -out deploy/secring.gpg -d
 deploy:
   provider: script
-  script: mvn deploy --settings deploy/settings.xml -DperformRelease=true -DskipTests=true
+  script: mvn deploy -P continous-integration release distribution --settings deploy/settings.xml -DperformRelease=true -DskipTests=true
   on:
     branch: master
 

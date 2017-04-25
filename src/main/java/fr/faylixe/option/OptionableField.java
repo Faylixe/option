@@ -14,9 +14,6 @@ import org.apache.commons.cli.Option;
  */
 public final class OptionableField {
 
-	/** Error message for non optional parameter not provided. **/
-	private static final String ARGUMENT_REQUIRED = "Argument %s is required";
-
 	/** Target field that is decorated. **/
 	private final Field field;
 
@@ -101,9 +98,8 @@ public final class OptionableField {
 	 * @param command {@link CommandLine} evaluated.
 	 * @param receiver Target field receiver class.
 	 * @throws IllegalAccessException If setting the field value is not permitted.
-	 * @throws IllegalArgumentException If the option is required and does not have value.
 	 */
-	public void validate(final CommandLine command, final Object receiver) throws IllegalAccessException, IllegalArgumentException {
+	public void validate(final CommandLine command, final Object receiver) throws IllegalAccessException {
 		validateReceiver(receiver);
 		if (command.hasOption(longName)) {
 			field.setAccessible(true);
@@ -117,9 +113,6 @@ public final class OptionableField {
 					field.set(receiver, object);
 				}
 			}
-		}
-		if (required) {
-			throw new IllegalArgumentException(String.format(ARGUMENT_REQUIRED, longName));
 		}
 	}
 	

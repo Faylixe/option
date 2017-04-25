@@ -62,10 +62,7 @@ public class OptionableContainer {
 			}
 			return true;
 		}
-		catch (final ParseException e) {
-			// TODO : Handle this case (rethrow ?)
-		}
-		catch (final IllegalAccessException | IllegalArgumentException e) {
+		catch (final ParseException | IllegalAccessException | IllegalArgumentException e) {
 			System.err.println("An error occurs while parsing command line parameter : " + e.getMessage());
 			formatter.printHelp(usage, options);
 		}

@@ -31,7 +31,7 @@ public abstract class OptionableApplication extends OptionableContainer implemen
 
 	/** {@inheritDoc} **/
 	@Override
-	public boolean bootstrap(String[] args) {
+	public boolean bootstrap(final String[] args) {
 		final boolean isBoostrapped = super.bootstrap(args);
 		if (isBoostrapped) {
 			run();

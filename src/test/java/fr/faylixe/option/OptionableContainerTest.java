@@ -15,7 +15,7 @@ import org.junit.Test;
 public final class OptionableContainerTest {
 
 	/** String value to be tested. **/
-	private static final String STRING = "Foo";
+	protected static final String STRING = "Foo";
 
 	/** Integer value to be tested. **/
 	private static final int INTEGER = 1;
@@ -43,7 +43,7 @@ public final class OptionableContainerTest {
 	 * 
 	 * @author fv
 	 */
-	private static class MyOptionableContainer extends OptionableContainer {
+	protected static class MyOptionableContainer extends OptionableContainer {
 
 		/** Integer parameter testing. **/
 		@Optionable
@@ -63,7 +63,7 @@ public final class OptionableContainerTest {
 
 		/** String parameter testing. **/
 		@Optionable(required=true)
-		private String s;
+		protected String s;
 
 	}
 
@@ -73,10 +73,10 @@ public final class OptionableContainerTest {
 	/** Test fixture. **/
 	@Before
 	public void setUp() {
-		this.container = new MyOptionableContainer();
+		container = new MyOptionableContainer();
 	}
 
-	/** Testing bootstrapping container. **/
+	/** Test bootstrapping container. **/
 	@Test
 	public void testValidBootstrap() {
 		assertTrue(container.bootstrap(ARGS));
@@ -87,7 +87,7 @@ public final class OptionableContainerTest {
 		assertEquals(STRING, container.s);
 	}
 
-	/** Testing bootstrapping with missing parameter. **/
+	/** Test bootstrapping with missing parameter. **/
 	public void testNotValidBootstrap() {
 		assertFalse(container.bootstrap(new String[]{}));
 	}

@@ -54,7 +54,16 @@ public final class OptionableFieldFactory {
 	 * @return <tt>true</tt> if the given <tt>name</tt> is available as short option, <tt>false</tt> otherwise.
 	 */
 	public boolean isShortOptionAvailable(final String name) {
-		return !shorts.contains(name);
+		return !shorts.contains(name.substring(0, 1));
+	}
+
+	/**
+	 * Adds the short option for the given <tt>name</tt>.
+	 * 
+	 * @param name Name of the option to add short from.
+	 */
+	private void addShort(final String name) {
+		shorts.add(name.substring(0, 1));
 	}
 
 	/**
@@ -102,7 +111,7 @@ public final class OptionableFieldFactory {
 	 * @throws IllegalStateException If no name can be used.
 	 */
 	private String getShortOption(final Field field, final String original) {
-		return getOption(field, original, this::isShortOptionAvailable, shorts::add).substring(0, 1);
+		return getOption(field, original, this::isShortOptionAvailable, this::addShort).substring(0, 1);
 	}
 
 	/**

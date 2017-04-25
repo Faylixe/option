@@ -1,7 +1,6 @@
 language: java
 env:
-	global:
-		- GPG_DIR="`pwd`/deploy"
+	- GPG_DIR="`pwd`/deploy"
 jdk:
 	- oraclejdk8
 script:

@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/Faylixe/option.svg?branch=master)](https://travis-ci.org/Faylixe/option)
 [![Codacy Badge](https://api.codacy.com/project/badge/Coverage/b6ef03db876e4a3f90006ee2d3956d59)](https://www.codacy.com/app/Faylixe/option?utm_source=github.com&utm_medium=referral&utm_content=Faylixe/option&utm_campaign=Badge_Coverage)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/b6ef03db876e4a3f90006ee2d3956d59)](https://www.codacy.com/app/Faylixe/option?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Faylixe/option&amp;utm_campaign=Badge_Grade)
+(https://maven-badges.herokuapp.com/maven-central/fr.faylixe/option/badge.svg)](https://maven-badges.herokuapp.com/maven-central/fr.faylixe/option)
 
 Option is a simple Java framework that allows easy command line option parsing.
 It is based on Apache Commons CLI framworks, but provides an easier interface
@@ -11,7 +12,7 @@ based on annotation.
 ## Basic usage
 
 Considering a Java command line application that could have a boolean flag settled and
-take a String parameter :
+take a String parameter, using Option, such task is easy :
 
 ```java
 public class App extends OptionableApplication {
@@ -34,6 +35,10 @@ public class App extends OptionableApplication {
 
 }
 ```
+
+All we have to do is to annotated application class attributes with @Optionable and calls
+bootstrap() methods using CLI args and the job is done ! Running such application will only
+consist in following command :
 
 ```bash
 javac App.java
